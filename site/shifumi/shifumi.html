@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shifumi - Pierre / Feuille / Ciseau</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <style>
+        .hidden{
+            opacity:0;
+            transition-duration: 1s;
+        }
+        .show{
+            opacity:1;
+            transition-duration: 2s;
+        }
+        .showbis{
+            opacity:1;
+            transition-duration: 2s;
+        }
+    </style>
+
+
+
+
+    <div class="jeu container">
+        <div class="resultat">
+            <div class="row justify-content-center text-center">
+                <div class="col-4 hidden" id="img-p" ></div>
+                <div class="col-4 " id="img-vs"></div>
+                <div class="col-4 hidden" id="img-c"></div>
+                <div class="col-12" id="resultatdugame"></div>
+            </div>
+            
+        </div>
+        <div class="row">
+
+            <div class="text-center col-6 col-lg-6">
+                <p>Score du joueur</p>
+                <div id="user-score"></div>
+            </div>
+            <div class="text-center col-6 col-lg-6">
+                <p>Score de l'ordinateur</p>
+                <div id="computer-score"></div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="choix text-center col-4 col-lg-4" id="p">
+                <img src="./img/pierre.png" class="img-fluid" alt="">
+            </div>
+            <div class="choix text-center col-4 col-lg-4" id="f">
+                <img src="./img/feuille.png" class="img-fluid" alt="">
+            </div>
+            <div class="choix text-center col-4 col-lg-4" id="c">
+                <img src="./img/ciseaux.png" class="img-fluid" alt="">
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="text-center col-6 col-lg-6">
+                <p>Manches gagnées</p>
+                <div id="manchewin"></div>
+            </div>
+            <div class="text-center col-6 col-lg-6">
+                <p>Manches perdues</p>
+                <div id="manchelose"></div>
+            </div>
+
+            <div class="text-center col-12">
+                <button type="button" class="btn btn-primary btn-lg" id="reset">Je suis mauvais on repart à
+                    zéro</button>
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+
+
+
+
+
+
+        let imgp = document.getElementById('img-p')
+        let imgvs = document.getElementById('img-vs')
+        let imgc = document.getElementById('img-c')
+        let resultatdugame = document.getElementById('resultatdugame')
+
+        //définition du score initial du joueur
+        let joueur_score = 0;
+        //définition du score initial de l'ordinateur
+        let computer_score = 0;
+
+        var winner = localStorage.getItem('WIN'); // win vaut
+        var loser = localStorage.getItem('LOSE');
+
+        let manches_gagnees
+        let manches_perdues
+
+        let manchewin = document.getElementById('manchewin');
+        let manchelose = document.getElementById('manchelose');
+
+        let reset = document.getElementById('reset');
+        reset.addEventListener("click", function () {
+            localStorage.clear();
+            window.location.reload();
+        })
+
+
+
+
+        if (winner == null) {
+            manches_gagnees = 0
+            manchewin.innerHTML = 0
+        } else {
+            manches_gagnees = winner
+            manchewin.innerHTML = manches_gagnees
+        }
+
+
+        if (loser == null) {
+            manches_perdues = 0
+            manchelose.innerHTML = 0
+        } else {
+            manches_perdues = loser
+            manchelose.innerHTML = manches_perdues
+        }
+
+
+
+
+
+
+
+
+
+        let userScore = document.getElementById('user-score')
+        let computerScore = document.getElementById('computer-score')
+        const pierre = document.getElementById('p');
+        const feuille = document.getElementById('f');
+        const ciseaux = document.getElementById('c');
+        const choix = {
+            "p": "<img src='./img/pierre.png' class='img-fluid'/>",
+            "f": "<img src='./img/feuille.png' class='img-fluid'/>",
+            "c": "<img src='./img/ciseaux.png' class='img-fluid'/>"
+        };
+        const resultat = document.querySelector('.resultat > p');
+
+
+        function finDuGameZbla() {
+
+            if (joueur_score == 3) {
+                //alert("Bravo jeune joueur tu as battu un ordinateur, te la pètes pas non plus")
+                manches_gagnees++;
+                localStorage.setItem('WIN', manches_gagnees);
+                window.location.reload();
+
+            }
+            if (computer_score == 3) {
+                //alert("Bah bravo bien joué t'as réussi a te faire battre par un ordi, tu n'es pas le nouveau John Connor")
+                manches_perdues++;
+                localStorage.setItem('LOSE', manches_perdues);
+                window.location.reload();
+
+            }
+        }
+
+        // let imgp = document.getElementById('img-p')
+        // let imgvs = document.getElementById('img-vs')
+        // let imgc = document.getElementById('img-c')
+        // let resultatdugame = document.getElementById('resultatdugame')
+
+
+        function choixOrdinateur() {
+            let choix = ["p", "f", "c"];
+            const randomNumber = Math.floor(Math.random() * 3);
+            return choix[randomNumber];
+        }
+
+
+        function win(user, computer) {
+            imgp.innerHTML = "";
+            joueur_score++;
+            userScore.innerHTML = joueur_score;
+            imgp.innerHTML = `${choix[user]}`;
+            imgvs.innerHTML = "<img src='./img/vs.png' class='img-fluid' />";
+            imgc.innerHTML = `${choix[computer]}`;
+            resultatdugame.innerHTML = "GAGNE";
+            
+           
+            
+         
+
+        }
+
+        function lose(user, computer) {
+            computer_score++;
+            computerScore.innerHTML = computer_score;
+            imgp.innerHTML = `${choix[user]}`;
+            imgvs.innerHTML = "<img src='./img/vs.png' class='img-fluid' />";
+            imgc.innerHTML = `${choix[computer]}`;
+            resultatdugame.innerHTML = "PERDU";
+
+        }
+
+        function par(user, computer) {
+            imgp.innerHTML = `${choix[user]}`;
+            imgvs.innerHTML = "<img src='./img/vs.png' class='img-fluid' />";
+            imgc.innerHTML = `${choix[computer]}`;
+            resultatdugame.innerHTML = "EGALITE";
+
+        }
+
+        function game(user) {
+
+            const computer = choixOrdinateur(); // choix de l'utilisateur P/F/C => Ordi : P/F/C
+            switch (user + computer) {
+                case "pc":
+                case "fp":
+                case "cf":
+                    win(user,
+                        computer) // On imagigne que le joueur a choisi ciseaux et l'ordi feuille du coup on passe a la fonction win les paramètres suivant C et F -> win(c,f)
+                    break;
+                case "cp":
+                case "pf":
+                case "fc":
+                    lose(user, computer);
+                    break;
+                case "pp":
+                case "ff":
+                case "cc":
+                    par(user, computer);
+                    break;
+            }
+            finDuGameZbla();
+        }
+
+
+           // let imgp = document.getElementById('img-p')
+        // let imgvs = document.getElementById('img-vs')
+        // let imgc = document.getElementById('img-c')
+        // let resultatdugame = document.getElementById('resultatdugame')
+
+        function fight(){
+            imgp.classList.add("show")
+            setTimeout( remove,5000)
+
+           
+        }
+
+
+        function remove(){
+            imgp.classList.remove('show')  
+        }
+
+        function main() {
+            pierre.addEventListener('click', function () {
+                game("p");
+                fight();
+          
+            });
+
+            feuille.addEventListener('click', function () {
+                game("f");
+          
+            });
+
+            ciseaux.addEventListener('click', function () {
+                game("c");
+              
+            });
+        }
+
+        main();
+    </script>
+
+
+</body>
+
+</html>
